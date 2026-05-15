@@ -1,0 +1,6 @@
+{
+  "name": "Remix: 倍數測定計算機",
+  "description": "提供單相與三相系統的電力倍數測定計算，包含電壓、一次與二次電流連動計算及誤差分析。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
