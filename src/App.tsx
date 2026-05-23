@@ -216,8 +216,10 @@ export default function App() {
     let sumVoltage = 0;
     
     if (va !== null) { sumVoltage += va; validVoltageCount++; }
-    if (vb !== null) { sumVoltage += vb; validVoltageCount++; }
-    if (vc !== null) { sumVoltage += vc; validVoltageCount++; }
+    if (systemType !== 'single-phase') {
+      if (vb !== null) { sumVoltage += vb; validVoltageCount++; }
+      if (vc !== null) { sumVoltage += vc; validVoltageCount++; }
+    }
 
     const avgV = validVoltageCount > 0 ? sumVoltage / validVoltageCount : 0;
 
@@ -227,7 +229,9 @@ export default function App() {
 
     if (ipa !== null) { sumPrimaryCurrent += ipa; validPrimaryCurrentCount++; }
     if (ipb !== null) { sumPrimaryCurrent += ipb; validPrimaryCurrentCount++; }
-    if (ipc !== null) { sumPrimaryCurrent += ipc; validPrimaryCurrentCount++; }
+    if (systemType !== 'single-phase') {
+      if (ipc !== null) { sumPrimaryCurrent += ipc; validPrimaryCurrentCount++; }
+    }
 
     const avgPrimaryI = validPrimaryCurrentCount > 0 ? sumPrimaryCurrent / validPrimaryCurrentCount : 0;
 
@@ -237,7 +241,9 @@ export default function App() {
 
     if (ia !== null) { sumCurrent += ia; validCurrentCount++; }
     if (ib !== null) { sumCurrent += ib; validCurrentCount++; }
-    if (ic !== null) { sumCurrent += ic; validCurrentCount++; }
+    if (systemType !== 'single-phase') {
+      if (ic !== null) { sumCurrent += ic; validCurrentCount++; }
+    }
 
     const avgI = validCurrentCount > 0 ? sumCurrent / validCurrentCount : 0;
 
@@ -332,22 +338,24 @@ export default function App() {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2 border-b pb-2">
               <span className="w-2 h-6 bg-blue-500 rounded-full inline-block"></span>
-              輸入相電壓 (V)
+              輸入線電壓 (V)
             </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {(['a', 'b', 'c'] as const).map((phase) => (
-                <div key={`v-${phase}`} className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={voltages[phase]}
-                    onChange={(e) => handleVoltageChange(phase, e.target.value)}
-                    placeholder="0"
-                    className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm"
-                  />
-                </div>
-              ))}
+            <div className={`grid ${systemType === 'single-phase' ? 'grid-cols-1 max-w-[120px] mx-auto' : 'grid-cols-3'} gap-3`}>
+              {(['a', 'b', 'c'] as const)
+                .filter((phase) => systemType !== 'single-phase' || phase === 'a')
+                .map((phase) => (
+                  <div key={`v-${phase}`} className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={voltages[phase]}
+                      onChange={(e) => handleVoltageChange(phase, e.target.value)}
+                      placeholder="0"
+                      className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -355,22 +363,24 @@ export default function App() {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2 border-b pb-2">
               <span className="w-2 h-6 bg-teal-500 rounded-full inline-block"></span>
-              輸入一次相電流 (A)
+              輸入一次線電流 (A)
             </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {(['a', 'b', 'c'] as const).map((phase) => (
-                <div key={`pi-${phase}`} className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={primaryCurrents[phase]}
-                    onChange={(e) => handlePrimaryCurrentChange(phase, e.target.value)}
-                    placeholder="0"
-                    className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors shadow-sm"
-                  />
-                </div>
-              ))}
+            <div className={`grid ${systemType === 'single-phase' ? 'grid-cols-2 max-w-[240px] mx-auto' : 'grid-cols-3'} gap-3`}>
+              {(['a', 'b', 'c'] as const)
+                .filter((phase) => systemType !== 'single-phase' || phase !== 'c')
+                .map((phase) => (
+                  <div key={`pi-${phase}`} className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={primaryCurrents[phase]}
+                      onChange={(e) => handlePrimaryCurrentChange(phase, e.target.value)}
+                      placeholder="0"
+                      className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors shadow-sm"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -378,22 +388,24 @@ export default function App() {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2 border-b pb-2">
               <span className="w-2 h-6 bg-green-500 rounded-full inline-block"></span>
-              輸入二次相電流 (A)
+              輸入二次線電流 (A)
             </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {(['a', 'b', 'c'] as const).map((phase) => (
-                <div key={`i-${phase}`} className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
-                  <input
-                    type="text"
-                    inputMode="decimal"
-                    value={currents[phase]}
-                    onChange={(e) => handleCurrentChange(phase, e.target.value)}
-                    placeholder="0"
-                    className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors shadow-sm"
-                  />
-                </div>
-              ))}
+            <div className={`grid ${systemType === 'single-phase' ? 'grid-cols-2 max-w-[240px] mx-auto' : 'grid-cols-3'} gap-3`}>
+              {(['a', 'b', 'c'] as const)
+                .filter((phase) => systemType !== 'single-phase' || phase !== 'c')
+                .map((phase) => (
+                  <div key={`i-${phase}`} className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      value={currents[phase]}
+                      onChange={(e) => handleCurrentChange(phase, e.target.value)}
+                      placeholder="0"
+                      className="w-full px-3 py-2 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors shadow-sm"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
