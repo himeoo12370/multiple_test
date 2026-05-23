@@ -345,7 +345,9 @@ export default function App() {
                 .filter((phase) => systemType !== 'single-phase' || phase === 'a')
                 .map((phase) => (
                   <div key={`v-${phase}`} className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">{phase} 相</label>
+                    <label className="text-xs font-medium text-gray-500 uppercase flex justify-center">
+                      {systemType === 'single-phase' && phase === 'a' ? 'ab' : phase} 相
+                    </label>
                     <input
                       type="text"
                       inputMode="decimal"
