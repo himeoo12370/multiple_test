@@ -1,7 +1,8 @@
 {
   "name": "Multiple Test App",
   "short_name": "TestApp",
-  "start_url": "./index.html",
+    "start_url": "/multiple_test/index.html",
+  "scope": "/multiple_test/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
