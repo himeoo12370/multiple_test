@@ -4,27 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Multiple_Test_Calculator</title>
-    <link rel="manifest" href="./manifest.json">
-  
-  <meta name="theme-color" content="#000000">
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <link rel="apple-touch-icon" href="./icon-192.png">
   </head>
   <body>
-    <h1>這是一個 PWA 測試網頁</h1>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        // 注意路徑：使用 ./sw.js 確保在 GitHub Pages 子路徑下正常運作
-        navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('Service Worker 註冊成功', reg))
-          .catch((err) => console.log('Service Worker 註冊失敗', err));
-      });
-    }
-  </script>
-</body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
-
